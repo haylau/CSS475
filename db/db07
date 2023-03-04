@@ -1,0 +1,1669 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: catalog; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.catalog (
+    sku character varying(10) NOT NULL,
+    description character varying(30) NOT NULL,
+    maximages integer DEFAULT 3 NOT NULL,
+    currentprice numeric(8,2) NOT NULL
+);
+
+
+ALTER TABLE public.catalog OWNER TO postgres;
+
+--
+-- Name: customerorder; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.customerorder (
+    id integer NOT NULL,
+    ordernumber character varying(15) NOT NULL,
+    orderdate timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    name character varying(40) NOT NULL,
+    shipaddress character varying(30) NOT NULL,
+    city character varying(20) NOT NULL,
+    state character(2) NOT NULL,
+    email character varying(40) NOT NULL,
+    soldprice numeric,
+    shipper integer,
+    trackingnum character varying(20),
+    shipdate timestamp without time zone,
+    deliverydate timestamp without time zone,
+    status integer NOT NULL
+);
+
+
+ALTER TABLE public.customerorder OWNER TO postgres;
+
+--
+-- Name: customerorder_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.customerorder_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.customerorder_id_seq OWNER TO postgres;
+
+--
+-- Name: customerorder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.customerorder_id_seq OWNED BY public.customerorder.id;
+
+
+--
+-- Name: dogbreed; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.dogbreed (
+    id integer NOT NULL,
+    name character varying(20) NOT NULL,
+    filelocation character varying(45) NOT NULL
+);
+
+
+ALTER TABLE public.dogbreed OWNER TO postgres;
+
+--
+-- Name: dogbreed_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.dogbreed_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dogbreed_id_seq OWNER TO postgres;
+
+--
+-- Name: dogbreed_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.dogbreed_id_seq OWNED BY public.dogbreed.id;
+
+
+--
+-- Name: imageinfo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.imageinfo (
+    id integer NOT NULL,
+    orderitemid integer,
+    dogbreedid integer,
+    displayname character varying(15),
+    displayorder integer
+);
+
+
+ALTER TABLE public.imageinfo OWNER TO postgres;
+
+--
+-- Name: imageinfo_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.imageinfo_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.imageinfo_id_seq OWNER TO postgres;
+
+--
+-- Name: imageinfo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.imageinfo_id_seq OWNED BY public.imageinfo.id;
+
+
+--
+-- Name: orderitem; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orderitem (
+    id integer NOT NULL,
+    customerorderid integer NOT NULL,
+    sku character varying(10) NOT NULL,
+    quantity integer NOT NULL
+);
+
+
+ALTER TABLE public.orderitem OWNER TO postgres;
+
+--
+-- Name: orderitem_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orderitem_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orderitem_id_seq OWNER TO postgres;
+
+--
+-- Name: orderitem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orderitem_id_seq OWNED BY public.orderitem.id;
+
+
+--
+-- Name: shipper; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.shipper (
+    id integer NOT NULL,
+    name character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.shipper OWNER TO postgres;
+
+--
+-- Name: state; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.state (
+    id character(2) NOT NULL,
+    name character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.state OWNER TO postgres;
+
+--
+-- Name: status; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.status (
+    id integer NOT NULL,
+    name character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.status OWNER TO postgres;
+
+--
+-- Name: toorder; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.toorder (
+    sku character varying(10) NOT NULL,
+    numonhand integer DEFAULT 0 NOT NULL,
+    numordered integer DEFAULT 0 NOT NULL,
+    numneeded integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.toorder OWNER TO postgres;
+
+--
+-- Name: customerorder id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder ALTER COLUMN id SET DEFAULT nextval('public.customerorder_id_seq'::regclass);
+
+
+--
+-- Name: dogbreed id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dogbreed ALTER COLUMN id SET DEFAULT nextval('public.dogbreed_id_seq'::regclass);
+
+
+--
+-- Name: imageinfo id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imageinfo ALTER COLUMN id SET DEFAULT nextval('public.imageinfo_id_seq'::regclass);
+
+
+--
+-- Name: orderitem id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orderitem ALTER COLUMN id SET DEFAULT nextval('public.orderitem_id_seq'::regclass);
+
+
+--
+-- Data for Name: catalog; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.catalog (sku, description, maximages, currentprice) FROM stdin;
+100000031	Roses are red  8 oz	3	4.99
+100000032	Roses are red 12 oz	3	5.99
+100000033	Roses are red 16 oz	4	6.49
+100000034	Ask not for whom barks 8 0z	3	4.99
+100000035	Ask Not for whom barks 12 oz	3	5.99
+100000036	Ask not for whom barks 16 oz	4	6.49
+100000037	Life is Better 8 oz	3	4.99
+100000038	Live is Better 12 oz	3	5.99
+100000039	Taknks for rubs and poop 8 oz	3	6.49
+100000040	Thanks for rubs and poop 12 oz	3	4.99
+100000041	Dog Dad 8 oz	3	5.99
+100000042	Dog Dad 12 oz	3	6.49
+100000043	Dog Dad 16 oz	4	4.99
+100000044	Dog Mom  8 oz	3	5.99
+100000045	Dog Mom 12 oz	3	6.49
+100000046	Dog Mom 16 oz	4	4.99
+100000047	Good Morning  8 oz	3	5.99
+100000048	Good Morning 12 oz	3	6.49
+100000049	Good Morning 16 oz	4	4.99
+100000050	Well be watching you  8 oz	2	5.99
+100000051	Well be watching you 12 oz	3	6.49
+100000052	Well be watching you 16 oz	4	4.99
+100000053	Cute Saying 1	3	5.99
+100000054	Cute Saying 2	3	6.49
+100000055	Cute Saying 3	3	4.99
+100000056	Cute Saying 4	3	5.99
+100000057	Cute Saying 5	3	6.49
+100000058	Cute Saying 6	4	4.99
+100000059	Cute Saying 7	3	5.99
+100000060	Cute Saying 8	3	6.49
+100000061	Cute Saying 9	3	4.99
+100000062	Cute Saying 10	3	5.99
+100000063	Cute Saying 11	4	6.49
+100000064	Cute Saying 12	3	4.99
+100000065	Cute Saying 13	3	5.99
+100000066	Cute Saying 14	3	6.49
+100000067	Cute Saying 15	3	4.99
+100000068	Cute Saying 16	4	5.99
+100000069	Cute Saying 17	3	6.49
+100000070	Cute Saying 18	3	4.99
+100000071	Cute Saying 19	3	5.99
+100000072	Cute Saying 20	3	6.49
+100000073	Cute Saying 21	3	4.99
+100000074	Cute Saying 22	2	5.99
+100000075	Cute Saying 23	3	6.49
+100000076	Cute Saying 24	3	4.99
+100000077	Cute Saying 25	3	5.99
+100000078	Cute Saying 26	3	6.49
+100000079	Cute Saying 27	3	4.99
+100000080	Cute Saying 28	4	5.99
+100000081	Cute Saying 29	4	6.49
+100000082	Cute Saying 30	4	4.99
+100000083	Cute Saying 31	3	5.99
+100000084	Cute Saying 32	3	6.49
+100000085	Cute Saying 33	3	4.99
+100000086	Cute Saying 34	1	5.99
+100000087	Cute Saying 35	3	6.49
+100000088	Cute Saying 36	3	4.99
+100000089	Cute Saying 37	3	5.99
+100000090	Cute Saying 38	3	6.49
+100000091	Cute Saying 39	3	4.99
+100000092	Cute Saying 40	3	5.99
+100000093	Cute Saying 41	3	6.49
+100000094	Cute Saying 42	3	4.99
+100000095	Cute Saying 43	3	5.99
+100000096	Cute Saying 44	3	6.49
+100000097	Cute Saying 45	3	4.99
+100000098	Cute Saying 46	3	5.99
+100000099	Cute Saying 47	3	6.49
+100000100	Cute Saying 48	3	4.99
+100000101	Cute Saying 49	3	5.99
+100000102	Cute Saying 50	3	6.49
+100000103	Cute Saying 51	3	4.99
+100000104	Cute Saying 52	3	5.99
+100000105	Cute Saying 53	3	6.49
+100000106	Cute Saying 54	3	4.99
+100000107	Cute Saying 55	3	5.99
+100000108	Cute Saying 56	3	6.49
+100000109	Cute Saying 57	3	4.99
+100000110	Cute Saying 58	3	5.99
+100000111	Cute Saying 59	3	6.49
+100000112	Cute Saying 60	3	4.99
+100000113	Cute Saying 61	3	5.99
+100000114	Cute Saying 62	3	6.49
+100000115	Cute Saying 63	3	4.99
+100000116	Cute Saying 64	3	5.99
+100000117	Cute Saying 65	3	6.49
+100000118	Cute Saying 66	3	4.99
+100000119	Cute Saying 67	3	5.99
+100000120	Cute Saying 68	3	6.49
+100000121	Cute Saying 69	3	4.99
+100000122	Cute Saying 70	3	5.99
+100000123	Cute Saying 71	3	6.49
+100000124	Cute Saying 72	3	4.99
+100000125	Cute Saying 73	3	5.99
+100000126	Cute Saying 74	3	6.49
+100000127	Cute Saying 75	3	4.99
+100000128	Cute Saying 76	3	5.99
+100000129	Cute Saying 77	3	6.49
+100000130	Cute Saying 78	3	4.99
+\.
+
+
+--
+-- Data for Name: customerorder; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.customerorder (id, ordernumber, orderdate, name, shipaddress, city, state, email, soldprice, shipper, trackingnum, shipdate, deliverydate, status) FROM stdin;
+2	Q217729200	2022-02-22 00:00:00	Customer 2	Ship Ad 2	City2	AZ	CustMail12	14.97	\N	\N	\N	\N	1
+3	Q689369323	2022-03-13 00:00:00	Customer 3	Ship Ad 3	City3	AR	CustMail13	5.99	\N	\N	\N	\N	1
+6	Q831272134	2022-02-26 00:00:00	Customer 6	Ship Ad 6	City6	CO	CustMail16	36.94	\N	\N	\N	\N	1
+7	Q858944276	2022-02-21 00:00:00	Customer 7	Ship Ad 7	City7	CT	CustMail17	6.49	\N	\N	\N	\N	1
+8	Q764737048	2022-03-11 00:00:00	Customer 8	Ship Ad 8	City8	DE	CustMail18	12.98	\N	\N	\N	\N	1
+9	Q347076278	2022-02-27 00:00:00	Customer 9	Ship Ad 9	City9	DE	CustMail19	9.98	\N	\N	\N	\N	1
+10	Q905503486	2022-02-24 00:00:00	Customer 10	Ship Ad 10	City10	DC	CustMail110	4.99	\N	\N	\N	\N	1
+73	Q476894247	2022-03-10 00:00:00	Customer 73	Ship Ad 73	City73	MA	CustMail173	14.97	\N	\N	\N	\N	1
+75	Q734350030	2022-02-22 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	19.47	\N	\N	\N	\N	1
+79	Q948976062	2022-02-18 00:00:00	Customer 94	Ship Ad 94	City94	MS	CustMail194	6.49	\N	\N	\N	\N	1
+80	Q207063966	2022-03-13 00:00:00	Customer 80	Ship Ad 80	City80	OR	CustMail180	6.49	\N	\N	\N	\N	1
+81	Q123128879	2022-03-04 00:00:00	Customer 81	Ship Ad 81	City81	TN	CustMail181	22.96	\N	\N	\N	\N	1
+82	Q935064536	2022-02-26 00:00:00	Customer 82	Ship Ad 82	City82	TX	CustMail182	9.98	\N	\N	\N	\N	1
+83	Q492576628	2022-02-20 00:00:00	Customer 83	Ship Ad 83	City83	UT	CustMail183	33.94	\N	\N	\N	\N	1
+86	Q943721810	2022-03-08 00:00:00	Customer 86	Ship Ad 86	City86	WA	CustMail186	5.99	\N	\N	\N	\N	1
+87	Q467152707	2022-02-25 00:00:00	Customer 87	Ship Ad 87	City87	WV	CustMail187	28.95	\N	\N	\N	\N	1
+88	Q727524177	2022-03-01 00:00:00	Customer 88	Ship Ad 88	City88	WI	CustMail188	19.96	\N	\N	\N	\N	1
+90	Q372417056	2022-03-15 00:00:00	Customer 90	Ship Ad 90	City90	MA	CustMail190	14.97	\N	\N	\N	\N	1
+91	Q728753238	2022-03-05 00:00:00	Customer 91	Ship Ad 91	City91	MI	CustMail191	14.97	\N	\N	\N	\N	1
+93	Q578833236	2022-03-04 00:00:00	Customer 93	Ship Ad 93	City93	MS	CustMail193	9.98	\N	\N	\N	\N	1
+94	Q654248876	2022-02-28 00:00:00	Customer 94	Ship Ad 94	City94	MS	CustMail194	6.49	\N	\N	\N	\N	1
+95	Q958302895	2022-03-06 00:00:00	Customer 95	Ship Ad 95	City95	MO	CustMail195	17.97	\N	\N	\N	\N	1
+96	Q719393634	2022-03-08 00:00:00	Customer 96	Ship Ad 96	City96	OK	CustMail196	4.99	\N	\N	\N	\N	1
+98	Q427346047	2022-02-22 00:00:00	Customer 98	Ship Ad 98	City98	TN	CustMail198	25.96	\N	\N	\N	\N	1
+142	Q102971811	2022-03-01 00:00:00	Customer 142	Ship Ad 142	City142	MN	CustMail1142	5.99	\N	\N	\N	\N	1
+143	Q576395984	2022-02-22 00:00:00	Customer 143	Ship Ad 143	City143	MS	CustMail1143	19.47	\N	\N	\N	\N	1
+144	Q238377908	2022-03-09 00:00:00	Customer 144	Ship Ad 144	City144	MS	CustMail1144	19.96	\N	\N	\N	\N	1
+145	Q390674154	2022-03-02 00:00:00	Customer 145	Ship Ad 145	City145	MO	CustMail1145	9.98	\N	\N	\N	\N	1
+146	Q668035436	2022-02-26 00:00:00	Customer 146	Ship Ad 146	City146	OK	CustMail1146	19.96	\N	\N	\N	\N	1
+147	Q325972302	2022-02-26 00:00:00	Customer 147	Ship Ad 147	City147	OR	CustMail1147	6.49	\N	\N	\N	\N	1
+148	Q443493360	2022-03-14 00:00:00	Customer 94	Ship Ad 94	City94	MS	CustMail194	49.92	\N	\N	\N	\N	1
+149	Q120507349	2022-02-18 00:00:00	Customer 149	Ship Ad 149	City149	TX	CustMail1149	4.99	\N	\N	\N	\N	1
+150	Q811282451	2022-03-03 00:00:00	Customer 150	Ship Ad 150	City150	UT	CustMail1150	11.98	\N	\N	\N	\N	1
+12	Q530169791	2022-03-10 00:00:00	Customer 12	Ship Ad 12	City12	FL	CustMail112	5.99	\N	\N	\N	\N	1
+13	Q810345062	2022-03-02 00:00:00	Customer 13	Ship Ad 13	City13	IL	CustMail113	14.97	\N	\N	\N	\N	1
+15	Q322795413	2022-03-04 00:00:00	Customer 15	Ship Ad 15	City15	IA	CustMail115	14.97	\N	\N	\N	\N	1
+17	Q174159354	2022-03-12 00:00:00	Customer 17	Ship Ad 17	City17	MA	CustMail117	25.96	\N	\N	\N	\N	1
+19	Q881602213	2022-03-04 00:00:00	Customer 19	Ship Ad 19	City19	MI	CustMail119	12.98	\N	\N	\N	\N	1
+20	Q108744843	2022-03-05 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	14.97	\N	\N	\N	\N	1
+22	Q858612230	2022-02-23 00:00:00	Customer 22	Ship Ad 22	City22	MS	CustMail122	25.96	\N	\N	\N	\N	1
+24	Q928488771	2022-03-05 00:00:00	Customer 24	Ship Ad 24	City24	OK	CustMail124	4.99	\N	\N	\N	\N	1
+27	Q630323850	2022-03-02 00:00:00	Customer 27	Ship Ad 27	City27	TX	CustMail127	4.99	\N	\N	\N	\N	1
+28	Q782936011	2022-02-20 00:00:00	Customer 28	Ship Ad 28	City28	UT	CustMail128	6.49	\N	\N	\N	\N	1
+32	Q599961998	2022-03-04 00:00:00	Customer 32	Ship Ad 32	City32	WV	CustMail132	5.99	\N	\N	\N	\N	1
+33	Q586946753	2022-02-18 00:00:00	Customer 33	Ship Ad 33	City33	WI	CustMail133	23.96	\N	\N	\N	\N	1
+35	Q136265992	2022-03-02 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	50.41	\N	\N	\N	\N	1
+37	Q998387350	2022-03-03 00:00:00	Customer 37	Ship Ad 37	City37	MN	CustMail137	19.47	\N	\N	\N	\N	1
+43	Q981497949	2022-02-26 00:00:00	Customer 43	Ship Ad 43	City43	TN	CustMail143	23.96	\N	\N	\N	\N	1
+1	Q568019877	2022-03-10 00:00:00	Customer 1	Ship Ad 1	City1	AL	CustMail1	11.98	\N	\N	\N	\N	2
+4	Q981737859	2022-03-11 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	25.96	\N	\N	\N	\N	2
+44	Q940367312	2022-03-09 00:00:00	Customer 44	Ship Ad 44	City44	TX	CustMail144	6.49	\N	\N	\N	\N	1
+45	Q591712111	2022-03-14 00:00:00	Customer 45	Ship Ad 45	City45	UT	CustMail145	6.49	\N	\N	\N	\N	1
+46	Q521486779	2022-03-15 00:00:00	Customer 46	Ship Ad 46	City46	VT	CustMail146	25.96	\N	\N	\N	\N	1
+47	Q911725606	2022-02-25 00:00:00	Customer 47	Ship Ad 47	City47	WA	CustMail147	4.99	\N	\N	\N	\N	1
+48	Q121841485	2022-03-09 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	11.98	\N	\N	\N	\N	1
+50	Q776368937	2022-03-10 00:00:00	Customer 50	Ship Ad 50	City50	WI	CustMail150	19.47	\N	\N	\N	\N	1
+51	Q535815874	2022-03-12 00:00:00	Customer 51	Ship Ad 51	City51	MA	CustMail151	18.97	\N	\N	\N	\N	1
+52	Q227595334	2022-03-14 00:00:00	Customer 52	Ship Ad 52	City52	MA	CustMail152	12.98	\N	\N	\N	\N	1
+54	Q543844592	2022-03-04 00:00:00	Customer 54	Ship Ad 54	City54	MN	CustMail154	25.96	\N	\N	\N	\N	1
+55	Q565169840	2022-02-19 00:00:00	Customer 55	Ship Ad 55	City55	MS	CustMail155	19.96	\N	\N	\N	\N	1
+56	Q586177425	2022-02-20 00:00:00	Customer 94	Ship Ad 94	City94	MS	CustMail194	15.97	\N	\N	\N	\N	1
+57	Q533682520	2022-03-04 00:00:00	Customer 57	Ship Ad 57	City57	MO	CustMail157	9.98	\N	\N	\N	\N	1
+59	Q107961041	2022-02-21 00:00:00	Customer 59	Ship Ad 59	City59	OR	CustMail159	43.92	\N	\N	\N	\N	1
+61	Q608869279	2022-02-24 00:00:00	Customer 61	Ship Ad 61	City61	WA	CustMail161	9.98	\N	\N	\N	\N	1
+62	Q884471740	2022-03-02 00:00:00	Customer 62	Ship Ad 62	City62	WV	CustMail162	9.98	\N	\N	\N	\N	1
+63	Q562388098	2022-03-14 00:00:00	Customer 63	Ship Ad 63	City63	WI	CustMail163	19.47	\N	\N	\N	\N	1
+64	Q881637420	2022-02-22 00:00:00	Customer 64	Ship Ad 64	City64	MA	CustMail164	17.97	\N	\N	\N	\N	1
+65	Q316510728	2022-03-14 00:00:00	Customer 65	Ship Ad 65	City65	MA	CustMail165	6.49	\N	\N	\N	\N	1
+66	Q982989726	2022-02-25 00:00:00	Customer 66	Ship Ad 66	City66	MI	CustMail166	12.98	\N	\N	\N	\N	1
+70	Q321903682	2022-03-15 00:00:00	Customer 113	Ship Ad 113	City113	DE	CustMail1113	23.96	\N	\N	\N	\N	1
+71	Q693101599	2022-02-27 00:00:00	Customer 71	Ship Ad 71	City71	OK	CustMail171	12.98	\N	\N	\N	\N	1
+26	Q961562422	2022-03-15 00:00:00	Customer 26	Ship Ad 26	City26	TN	CustMail126	15.97	\N	\N	\N	\N	3
+29	Q987718113	2022-03-14 00:00:00	Customer 29	Ship Ad 29	City29	VT	CustMail129	19.47	\N	\N	\N	\N	3
+30	Q879829344	2022-03-14 00:00:00	Customer 30	Ship Ad 30	City30	WA	CustMail130	23.96	\N	\N	\N	\N	3
+31	Q206656838	2022-02-27 00:00:00	Customer 31	Ship Ad 31	City31	WA	CustMail131	6.49	\N	\N	\N	\N	3
+34	Q268528974	2022-03-11 00:00:00	Customer 34	Ship Ad 34	City34	MA	CustMail134	19.47	\N	\N	\N	\N	3
+36	Q591942681	2022-02-21 00:00:00	Customer 36	Ship Ad 36	City36	MI	CustMail136	9.98	\N	\N	\N	\N	3
+38	Q182729954	2022-02-24 00:00:00	Customer 38	Ship Ad 38	City38	MS	CustMail138	11.98	\N	\N	\N	\N	3
+39	Q739322542	2022-03-14 00:00:00	Customer 39	Ship Ad 39	City39	MS	CustMail139	11.98	\N	\N	\N	\N	3
+40	Q448344356	2022-03-11 00:00:00	Customer 40	Ship Ad 40	City40	MO	CustMail140	12.98	\N	\N	\N	\N	3
+58	Q959949502	2022-02-19 00:00:00	Customer 58	Ship Ad 58	City58	OK	CustMail158	19.47	1	8590432368	2022-03-08 00:00:00	\N	4
+60	Q442774734	2022-03-15 00:00:00	Customer 4	Ship Ad 4	City4	CA	CustMail14	14.97	4	5852952657	2022-03-25 00:00:00	\N	4
+67	Q909058933	2022-03-05 00:00:00	Customer 67	Ship Ad 67	City67	MN	CustMail167	14.97	3	4689032566	2022-03-31 00:00:00	\N	4
+68	Q388972493	2022-03-11 00:00:00	Customer 68	Ship Ad 68	City68	MS	CustMail168	25.96	2	0468245768	2022-03-23 00:00:00	\N	4
+69	Q152892390	2022-03-01 00:00:00	Customer 69	Ship Ad 69	City69	MS	CustMail169	9.98	3	4302740932	2022-03-23 00:00:00	\N	4
+42	Q193486396	2022-03-08 00:00:00	Customer 42	Ship Ad 42	City42	OR	CustMail142	9.98	2	0012832157	2022-03-20 00:00:00	\N	4
+49	Q637323929	2022-03-11 00:00:00	Customer 49	Ship Ad 49	City49	WV	CustMail149	23.96	3	0468245768	2022-03-26 00:00:00	\N	4
+53	Q666339234	2022-03-05 00:00:00	Customer 53	Ship Ad 53	City53	MI	CustMail153	19.96	2	5679042725	2022-03-23 00:00:00	\N	4
+99	Q926334672	2022-02-27 00:00:00	Customer 99	Ship Ad 99	City99	TX	CustMail199	11.98	\N	\N	\N	\N	1
+100	Q176312615	2022-03-15 00:00:00	Customer 100	Ship Ad 100	City100	UT	CustMail1100	43.92	\N	\N	\N	\N	1
+102	Q763640185	2022-02-26 00:00:00	Customer 102	Ship Ad 102	City102	WA	CustMail1102	4.99	\N	\N	\N	\N	1
+103	Q579334283	2022-02-23 00:00:00	Customer 113	Ship Ad 113	City113	DE	CustMail1113	65.38	\N	\N	\N	\N	1
+104	Q516075594	2022-02-27 00:00:00	Customer 104	Ship Ad 104	City104	WV	CustMail1104	9.98	\N	\N	\N	\N	1
+105	Q556888796	2022-02-28 00:00:00	Customer 105	Ship Ad 105	City105	WI	CustMail1105	9.98	\N	\N	\N	\N	1
+106	Q641314826	2022-03-09 00:00:00	Customer 106	Ship Ad 106	City106	MA	CustMail1106	9.98	\N	\N	\N	\N	1
+108	Q401229064	2022-03-07 00:00:00	Customer 108	Ship Ad 108	City108	AR	CustMail1108	30.95	\N	\N	\N	\N	1
+109	Q470935032	2022-02-19 00:00:00	Customer 109	Ship Ad 109	City109	CA	CustMail1109	15.97	\N	\N	\N	\N	1
+111	Q236814156	2022-03-11 00:00:00	Customer 111	Ship Ad 111	City111	CO	CustMail1111	39.43	\N	\N	\N	\N	1
+112	Q592031859	2022-03-15 00:00:00	Customer 112	Ship Ad 112	City112	CT	CustMail1112	43.93	\N	\N	\N	\N	1
+115	Q763622786	2022-02-19 00:00:00	Customer 115	Ship Ad 115	City115	DC	CustMail1115	4.99	\N	\N	\N	\N	1
+116	Q894125318	2022-03-14 00:00:00	Customer 116	Ship Ad 116	City116	DC	CustMail1116	49.42	\N	\N	\N	\N	1
+117	Q645308140	2022-03-03 00:00:00	Customer 117	Ship Ad 117	City117	FL	CustMail1117	33.94	\N	\N	\N	\N	1
+119	Q305372176	2022-03-10 00:00:00	Customer 119	Ship Ad 119	City119	IN	CustMail1119	48.92	\N	\N	\N	\N	1
+121	Q100834991	2022-03-01 00:00:00	Customer 113	Ship Ad 113	City113	DE	CustMail1113	23.96	\N	\N	\N	\N	1
+122	Q869105900	2022-02-27 00:00:00	Customer 122	Ship Ad 122	City122	MA	CustMail1122	11.98	\N	\N	\N	\N	1
+123	Q124924216	2022-03-07 00:00:00	Customer 123	Ship Ad 123	City123	MA	CustMail1123	25.96	\N	\N	\N	\N	1
+124	Q835306607	2022-03-04 00:00:00	Customer 124	Ship Ad 124	City124	MI	CustMail1124	36.93	\N	\N	\N	\N	1
+125	Q744745838	2022-03-05 00:00:00	Customer 125	Ship Ad 125	City125	MN	CustMail1125	48.92	\N	\N	\N	\N	1
+126	Q109379079	2022-03-14 00:00:00	Customer 126	Ship Ad 126	City126	MS	CustMail1126	19.47	\N	\N	\N	\N	1
+127	Q861868542	2022-03-02 00:00:00	Customer 127	Ship Ad 127	City127	MS	CustMail1127	26.45	\N	\N	\N	\N	1
+128	Q686796683	2022-03-09 00:00:00	Customer 128	Ship Ad 128	City128	MO	CustMail1128	4.99	\N	\N	\N	\N	1
+129	Q475702917	2022-02-19 00:00:00	Customer 129	Ship Ad 129	City129	OK	CustMail1129	11.98	\N	\N	\N	\N	1
+130	Q516662838	2022-03-01 00:00:00	Customer 130	Ship Ad 130	City130	OR	CustMail1130	11.48	\N	\N	\N	\N	1
+131	Q800073321	2022-02-21 00:00:00	Customer 131	Ship Ad 131	City131	TN	CustMail1131	16.47	\N	\N	\N	\N	1
+132	Q620271761	2022-03-07 00:00:00	Customer 132	Ship Ad 132	City132	TX	CustMail1132	25.96	\N	\N	\N	\N	1
+133	Q459519071	2022-03-15 00:00:00	Customer 133	Ship Ad 133	City133	UT	CustMail1133	4.99	\N	\N	\N	\N	1
+134	Q677510732	2022-03-03 00:00:00	Customer 134	Ship Ad 134	City134	VT	CustMail1134	6.49	\N	\N	\N	\N	1
+135	Q308841421	2022-03-04 00:00:00	Customer 135	Ship Ad 135	City135,	AL	CustMail1135	17.97	\N	\N	\N	\N	1
+136	Q193955905	2022-02-25 00:00:00	Customer 136	Ship Ad 136	City136	WA	CustMail1136	11.98	\N	\N	\N	\N	1
+137	Q123057646	2022-03-15 00:00:00	Customer 137	Ship Ad 137	City137	WV	CustMail1137	55.90	\N	\N	\N	\N	1
+138	Q140062298	2022-02-20 00:00:00	Customer 138	Ship Ad 138	City138	WI	CustMail1138	12.98	\N	\N	\N	\N	1
+139	Q764138812	2022-02-23 00:00:00	Customer 139	Ship Ad 139	City139	MA	CustMail1139	24.46	\N	\N	\N	\N	1
+141	Q266305374	2022-03-02 00:00:00	Customer 141	Ship Ad 141	City141	MI	CustMail1141	4.99	\N	\N	\N	\N	1
+5	Q331207580	2022-03-03 00:00:00	Customer 5	Ship Ad 5	City5	CA	CustMail15	25.96	\N	\N	\N	\N	2
+11	Q776234989	2022-03-07 00:00:00	Customer 11	Ship Ad 11	City11	DC	CustMail111	12.98	\N	\N	\N	\N	2
+14	Q910934386	2022-02-21 00:00:00	Customer 14	Ship Ad 14	City14	IN	CustMail114	9.98	\N	\N	\N	\N	2
+16	Q218606169	2022-02-24 00:00:00	Customer 16	Ship Ad 16	City16	KS	CustMail116	4.99	\N	\N	\N	\N	2
+18	Q900190146	2022-03-09 00:00:00	Customer 18	Ship Ad 18	City18	MA	CustMail118	19.96	\N	\N	\N	\N	2
+21	Q418238894	2022-02-25 00:00:00	Customer 21	Ship Ad 21	City21	MS	CustMail121	11.98	\N	\N	\N	\N	2
+23	Q212796061	2022-03-06 00:00:00	Customer 23	Ship Ad 23	City23	MO	CustMail123	6.49	\N	\N	\N	\N	2
+25	Q607777625	2022-02-25 00:00:00	Customer 25	Ship Ad 25	City25	OR	CustMail125	9.98	\N	\N	\N	\N	2
+74	Q376541071	2022-02-23 00:00:00	Customer 74	Ship Ad 74	City74	MI	CustMail174	5.99	\N	\N	\N	\N	4
+140	Q272253409	2022-02-18 00:00:00	Customer 140	Ship Ad 140	City140	MA	CustMail1140	11.48	3	0849573649	2022-03-01 00:00:00	\N	4
+77	Q881442325	2022-03-06 00:00:00	Customer 77	Ship Ad 77	City77	MS	CustMail177	25.96	2	2947562849	2022-03-12 00:00:00	2022-03-15 00:00:00	5
+97	Q808010184	2022-03-12 00:00:00	Customer 97	Ship Ad 97	City97	OR	CustMail197	25.96	3	O037562943	2022-03-17 00:00:00	2022-03-20 00:00:00	5
+101	Q303332985	2022-03-06 00:00:00	Customer 101	Ship Ad 101	City101	VT	CustMail1101	23.96	3	LKDJIUR889	2022-03-10 00:00:00	2022-03-12 00:00:00	5
+41	Q617701941	2022-02-18 00:00:00	Customer 41	Ship Ad 41	City41	OK	CustMail141	12.98	1	0012345678	2022-02-23 00:00:00	\N	4
+72	Q333066972	2022-03-09 00:00:00	Customer 72	Ship Ad 72	City72	OR	CustMail172	45.43	1	7901232456	2022-04-13 00:00:00	\N	4
+76	Q927227386	2022-03-11 00:00:00	Customer 76	Ship Ad 76	City76	MS	CustMail176	19.96	3	4726937900	2022-03-17 00:00:00	\N	4
+78	Q456936068	2022-02-28 00:00:00	Customer 78	Ship Ad 78	City78	MO	CustMail178	9.98	3	9752038126	2022-03-02 00:00:00	\N	4
+84	Q226109116	2022-03-05 00:00:00	Customer 84	Ship Ad 84	City84	VT	CustMail184	24.46	1	8088082344	2022-04-10 00:00:00	\N	4
+85	Q515745274	2022-03-12 00:00:00	Customer 85	Ship Ad 85	City85	WA	CustMail185	9.98	1	8088053422	2022-03-24 00:00:00	\N	4
+89	Q773725028	2022-02-20 00:00:00	Customer 89	Ship Ad 89	City89	MA	CustMail189	4.99	2	8088045633	2022-03-01 00:00:00	\N	4
+92	Q976691987	2022-02-28 00:00:00	Customer 92	Ship Ad 92	City92	MN	CustMail192	19.96	2	4563890553	2022-03-02 00:00:00	\N	4
+113	Q933566579	2022-03-08 00:00:00	Customer 113	Ship Ad 113	City113	DE	CustMail1113	31.45	3	RKODU83JJJ	2022-03-12 00:00:00	\N	4
+114	Q985242060	2022-03-13 00:00:00	Customer 114	Ship Ad 114	City114	DE	CustMail1114	26.95	2	98472305K8	2022-03-14 00:00:00	\N	4
+107	Q961833331	2022-02-26 00:00:00	Customer 107	Ship Ad 107	City107	AZ	CustMail1107	4.99	4	LKJER934H5	2022-03-10 00:00:00	2022-03-12 00:00:00	5
+110	Q855010576	2022-02-27 00:00:00	Customer 110	Ship Ad 110	City110	CA	CustMail1110	19.96	4	ELSKJFU584	2022-03-04 00:00:00	2022-03-06 00:00:00	5
+118	Q176769020	2022-02-23 00:00:00	Customer 118	Ship Ad 118	City118	IL	CustMail1118	29.95	1	9483049588	2022-03-29 00:00:00	2022-03-31 00:00:00	5
+120	Q616070633	2022-02-28 00:00:00	Customer 120	Ship Ad 120	City120	IA	CustMail1120	37.44	2	9703583759	2022-03-05 00:00:00	2022-03-08 00:00:00	5
+\.
+
+
+--
+-- Data for Name: dogbreed; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.dogbreed (id, name, filelocation) FROM stdin;
+1	Afghan	/Some/Misc/Directory/Afghan
+2	Airedale Terrier	/Some/Misc/Directory/Airedale Terrier
+3	Alaskan Malamute	/Some/Misc/Directory/Alaskan Malamute
+4	American Bulldogs	/Some/Misc/Directory/American Bulldogs
+5	Water Spaniel	/Some/Misc/Directory/Water Spaniel
+6	Basset Hound	/Some/Misc/Directory/Basset Hound
+7	Beagle	/Some/Misc/Directory/Beagle
+8	Bearded Collie	/Some/Misc/Directory/Bearded Collie
+9	Bernese Mountain Dog	/Some/Misc/Directory/Bernese Mountain Dog
+10	Bichon Frise	/Some/Misc/Directory/Bichon Frise
+11	Russian Terrier	/Some/Misc/Directory/Russian Terrier
+12	Border Collie	/Some/Misc/Directory/Border Collie
+13	Boston Terrier	/Some/Misc/Directory/Boston Terrier
+14	Boxer	/Some/Misc/Directory/Boxer
+15	Bulldog	/Some/Misc/Directory/Bulldog
+16	Welsk Corgi	/Some/Misc/Directory/Welsk Corgi
+17	Chihuahua	/Some/Misc/Directory/Chihuahua
+18	ChowChow	/Some/Misc/Directory/ChowChow
+19	Cocker Spaniel	/Some/Misc/Directory/Cocker Spaniel
+20	Dachshund	/Some/Misc/Directory/Dachshund
+21	Collie	/Some/Misc/Directory/Collie
+22	Dalmation	/Some/Misc/Directory/Dalmation
+23	Doberman Pinscher	/Some/Misc/Directory/Doberman Pinscher
+24	German Shepherd	/Some/Misc/Directory/German Shepherd
+25	Gread Dane	/Some/Misc/Directory/Gread Dane
+26	Golden Tetriever	/Some/Misc/Directory/Golden Tetriever
+27	Greyhound	/Some/Misc/Directory/Greyhound
+28	Komondor	/Some/Misc/Directory/Komondor
+29	Labrador Retriever	/Some/Misc/Directory/Labrador Retriever
+30	Manchester Terrier 	/Some/Misc/Directory/Manchester Terrier 
+31	Maltese	/Some/Misc/Directory/Maltese
+32	Mastiff	/Some/Misc/Directory/Mastiff
+33	Pekingese	/Some/Misc/Directory/Pekingese
+34	Pomeranian	/Some/Misc/Directory/Pomeranian
+35	Poodle	/Some/Misc/Directory/Poodle
+36	Pug	/Some/Misc/Directory/Pug
+37	Rhodesian Ridgeback	/Some/Misc/Directory/Rhodesian Ridgeback
+38	Rottweiler	/Some/Misc/Directory/Rottweiler
+39	Saint Bernard	/Some/Misc/Directory/Saint Bernard
+40	Schnauzer	/Some/Misc/Directory/Schnauzer/
+\.
+
+
+--
+-- Data for Name: imageinfo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.imageinfo (id, orderitemid, dogbreedid, displayname, displayorder) FROM stdin;
+1	1	30	fido1	1
+2	1	19	max1	2
+3	1	23	fluffy1	3
+4	2	4	barky1	1
+5	2	39	winston1	2
+6	2	35	jojo1	3
+7	3	23	oscar1	1
+8	3	5	luna1	2
+9	3	15	MrBig1	3
+10	4	32	Alics1	1
+11	4	14	fido2	2
+12	4	6	max2	3
+13	5	11	fluffy2	1
+14	5	25	barky2	2
+15	5	31	winston2	3
+16	6	36	jojo2	1
+17	6	34	oscar2	2
+18	6	37	luna2	3
+19	7	37	MrBig2	1
+20	7	27	Alics2	2
+21	7	10	fido3	3
+22	8	36	max3	1
+23	8	21	fluffy3	2
+24	8	22	barky3	3
+25	9	11	winston3	1
+26	9	37	jojo3	2
+27	9	29	oscar3	3
+28	10	34	luna3	1
+29	10	34	MrBig3	2
+30	10	8	Alics3	3
+31	11	3	fido4	1
+32	11	15	max4	2
+33	11	36	fluffy4	3
+34	12	27	barky4	1
+35	12	38	winston4	2
+36	12	1	jojo4	3
+37	13	20	oscar4	1
+38	13	26	luna4	2
+39	13	23	MrBig4	3
+40	14	21	Alics4	1
+41	14	27	fido5	2
+42	14	8	max5	3
+43	15	25	fluffy5	1
+44	15	12	barky5	2
+45	15	33	winston5	3
+46	16	10	jojo5	1
+47	16	31	oscar5	2
+48	16	12	luna5	3
+49	17	4	MrBig5	1
+50	17	19	Alics5	2
+51	17	34	fido6	3
+52	18	16	max6	1
+53	18	40	fluffy6	2
+54	18	11	barky6	3
+55	19	3	winston6	1
+56	19	20	jojo6	2
+57	19	29	oscar6	3
+58	20	12	luna6	1
+59	20	3	MrBig6	2
+60	20	4	Alics6	3
+61	21	21	fido7	1
+62	21	13	max7	2
+63	21	34	fluffy7	3
+64	22	12	barky7	1
+65	22	19	winston7	2
+66	22	3	jojo7	3
+67	23	15	oscar7	1
+68	23	11	luna7	2
+69	23	5	MrBig7	3
+70	24	29	Alics7	1
+71	24	7	fido8	2
+72	24	34	max8	3
+73	25	19	fluffy8	1
+74	25	2	barky8	2
+75	25	40	winston8	3
+76	26	7	jojo8	1
+77	26	6	oscar8	2
+78	26	31	luna8	3
+79	28	37	max9	1
+80	28	35	fluffy9	2
+81	28	19	barky9	3
+82	29	20	winston9	1
+83	29	26	jojo9	2
+84	29	16	oscar9	3
+85	30	37	luna9	1
+86	30	16	MrBig9	2
+87	30	27	Alics9	3
+88	31	21	fido10	1
+89	31	36	max10	2
+90	31	8	fluffy10	3
+91	32	40	barky10	1
+92	32	37	winston10	2
+93	32	3	jojo10	3
+94	33	1	oscar10	1
+95	33	10	luna10	2
+96	33	10	MrBig10	3
+97	34	22	Alics10	1
+98	34	8	fido11	2
+99	34	15	max11	3
+100	35	2	fluffy11	1
+101	35	29	barky11	2
+102	35	21	winston11	3
+103	36	28	jojo11	1
+104	36	22	oscar11	2
+105	36	2	luna11	3
+106	37	11	MrBig11	1
+107	37	24	Alics11	2
+108	37	39	fido12	3
+109	38	36	max12	1
+110	38	4	fluffy12	2
+111	38	5	barky12	3
+112	39	17	winston12	1
+113	39	25	jojo12	2
+114	39	23	oscar12	3
+115	40	23	luna12	1
+116	40	31	MrBig12	2
+117	40	28	Alics12	3
+118	41	24	fido13	1
+119	41	12	max13	2
+120	41	11	fluffy13	3
+121	42	8	barky13	1
+122	42	1	winston13	2
+123	42	32	jojo13	3
+124	43	32	oscar13	1
+125	43	22	luna13	2
+126	43	5	MrBig13	3
+127	44	30	Alics13	1
+128	44	25	fido14	2
+129	44	25	max14	3
+130	45	19	fluffy14	1
+131	45	9	barky14	2
+132	45	35	winston14	3
+133	46	17	jojo14	1
+134	46	37	oscar14	2
+135	46	26	luna14	3
+136	47	3	MrBig14	1
+137	47	24	Alics14	2
+138	47	12	fido15	3
+139	48	8	max15	1
+140	48	13	fluffy15	2
+141	48	39	barky15	3
+142	49	9	winston15	1
+143	49	3	jojo15	2
+144	49	24	oscar15	3
+145	50	18	luna15	1
+146	50	17	MrBig15	2
+147	50	10	Alics15	3
+148	51	39	fido16	1
+149	51	12	max16	2
+150	51	19	fluffy16	3
+151	52	24	barky16	1
+152	52	9	winston16	2
+153	52	34	jojo16	3
+154	53	25	oscar16	1
+155	53	38	luna16	2
+156	53	3	MrBig16	3
+157	54	29	Alics16	1
+158	54	13	fido17	2
+159	54	7	max17	3
+160	55	3	fluffy17	1
+161	55	11	barky17	2
+162	55	16	winston17	3
+163	56	24	jojo17	1
+164	56	29	oscar17	2
+165	56	11	luna17	3
+166	57	1	MrBig17	1
+167	57	5	Alics17	2
+168	57	28	fido18	3
+169	59	2	winston18	1
+170	59	10	jojo18	2
+171	59	24	oscar18	3
+172	60	23	luna18	1
+173	60	25	MrBig18	2
+174	60	40	Alics18	3
+175	61	11	fido19	1
+176	61	10	max19	2
+177	61	39	fluffy19	3
+178	62	6	barky19	1
+179	62	37	winston19	2
+180	62	19	jojo19	3
+181	63	34	oscar19	1
+182	63	36	luna19	2
+183	63	12	MrBig19	3
+184	64	11	Alics19	1
+185	64	34	fido20	2
+186	64	33	max20	3
+187	65	12	fluffy20	1
+188	65	4	barky20	2
+189	65	24	winston20	3
+190	66	20	jojo20	1
+191	66	27	oscar20	2
+192	66	32	luna20	3
+193	67	31	MrBig20	1
+194	67	18	Alics20	2
+195	67	16	fido21	3
+196	68	11	max21	1
+197	68	30	fluffy21	2
+198	68	18	barky21	3
+199	69	6	winston21	1
+200	69	33	jojo21	2
+201	69	32	oscar21	3
+202	70	33	luna21	1
+203	70	25	MrBig21	2
+204	70	28	Alics21	3
+205	71	27	fido22	1
+206	71	28	max22	2
+207	71	19	fluffy22	3
+208	72	35	barky22	1
+209	72	32	winston22	2
+210	72	36	jojo22	3
+211	73	24	oscar22	1
+212	73	6	luna22	2
+213	73	2	MrBig22	3
+214	74	30	Alics22	1
+215	74	28	fido23	2
+216	74	25	max23	3
+217	75	9	fluffy23	1
+218	75	40	barky23	2
+219	75	13	winston23	3
+220	76	31	jojo23	1
+221	76	33	oscar23	2
+222	76	9	luna23	3
+223	77	19	MrBig23	1
+224	77	25	Alics23	2
+225	77	21	fido24	3
+226	78	12	max24	1
+227	78	23	fluffy24	2
+228	78	3	barky24	3
+229	79	40	winston24	1
+230	79	35	jojo24	2
+231	79	32	oscar24	3
+232	80	27	luna24	1
+233	80	23	MrBig24	2
+234	80	5	Alics24	3
+235	81	32	fido25	1
+236	81	24	max25	2
+237	81	26	fluffy25	3
+238	82	8	barky25	1
+239	82	14	winston25	2
+240	82	35	jojo25	3
+241	83	3	oscar25	1
+242	83	25	luna25	2
+243	83	33	MrBig25	3
+244	84	26	Alics25	1
+245	84	4	fido26	2
+246	84	27	max26	3
+247	85	12	fluffy26	1
+248	85	38	barky26	2
+249	85	18	winston26	3
+250	86	4	jojo26	1
+251	86	5	oscar26	2
+252	86	36	luna26	3
+253	87	14	MrBig26	1
+254	87	31	Alics26	2
+255	87	4	fido27	3
+256	88	36	max27	1
+257	88	32	fluffy27	2
+258	88	22	barky27	3
+259	89	38	winston27	1
+260	89	24	jojo27	2
+261	89	40	oscar27	3
+262	90	11	luna27	1
+263	90	11	MrBig27	2
+264	90	39	Alics27	3
+265	91	3	fido28	1
+266	91	15	max28	2
+267	91	8	fluffy28	3
+268	92	24	barky28	1
+269	92	34	winston28	2
+270	92	10	jojo28	3
+271	93	11	oscar28	1
+272	93	4	luna28	2
+273	93	34	MrBig28	3
+274	94	3	Alics28	1
+275	94	2	fido29	2
+276	94	17	max29	3
+277	95	36	fluffy29	1
+278	95	9	barky29	2
+279	95	1	winston29	3
+280	96	7	jojo29	1
+281	96	17	oscar29	2
+282	96	33	luna29	3
+283	97	35	MrBig29	1
+284	97	34	Alics29	2
+285	97	35	fido30	3
+286	98	39	max30	1
+287	98	37	fluffy30	2
+288	98	35	barky30	3
+289	99	21	winston30	1
+290	99	26	jojo30	2
+291	99	36	oscar30	3
+292	100	7	luna30	1
+293	100	10	MrBig30	2
+294	100	37	Alics30	3
+295	101	13	fido31	1
+296	101	2	max31	2
+297	101	23	fluffy31	3
+298	102	4	barky31	1
+299	102	14	winston31	2
+300	102	7	jojo31	3
+301	103	25	oscar31	1
+302	103	36	luna31	2
+303	103	18	MrBig31	3
+304	104	17	Alics31	1
+305	104	8	fido32	2
+306	104	32	max32	3
+307	105	38	fluffy32	1
+308	105	16	barky32	2
+309	105	3	winston32	3
+310	106	37	jojo32	1
+311	106	24	oscar32	2
+312	106	4	luna32	3
+313	107	40	MrBig32	1
+314	107	29	Alics32	2
+315	107	20	fido33	3
+316	108	31	max33	1
+317	108	37	fluffy33	2
+318	108	2	barky33	3
+319	109	16	winston33	1
+320	109	7	jojo33	2
+321	109	12	oscar33	3
+322	110	11	luna33	1
+323	110	37	MrBig33	2
+324	110	32	Alics33	3
+325	111	18	fido34	1
+326	111	27	max34	2
+327	111	1	fluffy34	3
+328	112	19	barky34	1
+329	112	21	winston34	2
+330	112	30	jojo34	3
+331	113	14	oscar34	1
+332	113	15	luna34	2
+333	113	27	MrBig34	3
+334	114	26	Alics34	1
+335	114	9	fido35	2
+336	114	8	max35	3
+337	115	34	fluffy35	1
+338	115	11	barky35	2
+339	115	40	winston35	3
+340	116	3	jojo35	1
+341	116	19	oscar35	2
+342	116	31	luna35	3
+343	117	3	MrBig35	1
+344	117	38	Alics35	2
+345	117	2	fido36	3
+346	118	38	max36	1
+347	118	38	fluffy36	2
+348	118	25	barky36	3
+349	119	35	winston36	1
+350	119	28	jojo36	2
+351	119	33	oscar36	3
+352	120	32	luna36	1
+353	120	6	MrBig36	2
+354	120	35	Alics36	3
+355	121	34	fido37	1
+356	121	24	max37	2
+357	121	12	fluffy37	3
+358	122	35	barky37	1
+359	122	23	winston37	2
+360	122	4	jojo37	3
+361	123	4	oscar37	1
+362	123	30	luna37	2
+363	123	32	MrBig37	3
+364	124	20	Alics37	1
+365	124	37	fido38	2
+366	124	25	max38	3
+367	125	11	fluffy38	1
+368	125	11	barky38	2
+369	125	17	winston38	3
+370	126	7	jojo38	1
+371	126	31	oscar38	2
+372	126	15	luna38	3
+373	127	12	MrBig38	1
+374	127	35	Alics38	2
+375	127	32	fido39	3
+376	128	2	max39	1
+377	128	40	fluffy39	2
+378	128	40	barky39	3
+379	129	26	winston39	1
+380	129	34	jojo39	2
+381	129	22	oscar39	3
+382	130	11	luna39	1
+383	130	33	MrBig39	2
+384	130	30	Alics39	3
+385	131	32	fido40	1
+386	131	29	max40	2
+387	131	33	fluffy40	3
+388	132	10	barky40	1
+389	132	38	winston40	2
+390	132	26	jojo40	3
+391	133	25	oscar40	1
+392	133	3	luna40	2
+393	133	20	MrBig40	3
+394	134	8	Alics40	1
+395	134	22	fido41	2
+396	134	11	max41	3
+397	135	2	fluffy41	1
+398	135	38	barky41	2
+399	135	9	winston41	3
+400	136	10	jojo41	1
+401	136	23	oscar41	2
+402	136	33	luna41	3
+403	137	14	MrBig41	1
+404	137	3	Alics41	2
+405	137	24	fido42	3
+406	138	30	max42	1
+407	138	40	fluffy42	2
+408	138	39	barky42	3
+409	139	34	winston42	1
+410	139	24	jojo42	2
+411	139	26	oscar42	3
+412	140	39	luna42	1
+413	140	17	MrBig42	2
+414	140	24	Alics42	3
+415	141	18	fido43	1
+416	141	38	max43	2
+417	141	29	fluffy43	3
+418	142	8	barky43	1
+419	142	7	winston43	2
+420	142	19	jojo43	3
+421	143	18	oscar43	1
+422	143	37	luna43	2
+423	143	36	MrBig43	3
+424	144	37	Alics43	1
+425	144	5	fido44	2
+426	144	36	max44	3
+427	145	33	fluffy44	1
+428	145	31	barky44	2
+429	145	9	winston44	3
+430	146	37	jojo44	1
+431	146	40	oscar44	2
+432	146	6	luna44	3
+433	147	7	MrBig44	1
+434	147	5	Alics44	2
+435	147	12	fido45	3
+436	148	18	max45	1
+437	148	9	fluffy45	2
+438	148	4	barky45	3
+439	149	1	winston45	1
+440	149	34	jojo45	2
+441	149	30	oscar45	3
+442	150	1	luna45	1
+443	150	37	MrBig45	2
+444	150	23	Alics45	3
+445	151	33	fido46	1
+446	151	15	max46	2
+447	151	36	fluffy46	3
+448	152	28	barky46	1
+449	152	37	winston46	2
+450	152	19	jojo46	3
+451	153	26	oscar46	1
+452	153	8	luna46	2
+453	153	16	MrBig46	3
+454	154	26	Alics46	1
+455	154	17	fido47	2
+456	154	31	max47	3
+457	155	15	fluffy47	1
+458	155	13	barky47	2
+459	155	13	winston47	3
+460	156	5	jojo47	1
+461	156	39	oscar47	2
+462	156	1	luna47	3
+463	157	29	MrBig47	1
+464	157	26	Alics47	2
+465	157	20	fido48	3
+466	158	26	max48	1
+467	158	8	fluffy48	2
+468	158	17	barky48	3
+469	159	2	winston48	1
+470	159	25	jojo48	2
+471	159	16	oscar48	3
+472	160	3	luna48	1
+473	160	7	MrBig48	2
+474	160	36	Alics48	3
+475	161	5	fido49	1
+476	161	11	max49	2
+477	161	28	fluffy49	3
+478	162	33	barky49	1
+479	162	30	winston49	2
+480	162	9	jojo49	3
+481	163	25	oscar49	1
+482	163	34	luna49	2
+483	163	21	MrBig49	3
+484	164	12	Alics49	1
+485	164	9	fido50	2
+486	164	19	max50	3
+487	165	7	fluffy50	1
+488	165	35	barky50	2
+489	165	16	winston50	3
+490	166	11	jojo50	1
+491	166	35	oscar50	2
+492	166	34	luna50	3
+493	167	37	MrBig50	1
+494	167	11	Alics50	2
+495	167	1	fido51	3
+496	168	11	max51	1
+497	168	19	fluffy51	2
+498	168	23	barky51	3
+499	169	40	winston51	1
+500	169	7	jojo51	2
+501	169	16	oscar51	3
+502	170	37	luna51	1
+503	170	26	MrBig51	2
+504	170	36	Alics51	3
+505	171	34	fido52	1
+506	171	23	max52	2
+507	171	32	fluffy52	3
+508	172	25	barky52	1
+509	172	13	winston52	2
+510	172	35	jojo52	3
+511	173	22	oscar52	1
+512	173	37	luna52	2
+513	173	15	MrBig52	3
+514	174	38	Alics52	1
+515	174	8	fido53	2
+516	174	13	max53	3
+517	175	29	fluffy53	1
+518	175	23	barky53	2
+519	175	29	winston53	3
+520	176	13	jojo53	1
+521	176	34	oscar53	2
+522	176	15	luna53	3
+523	177	23	MrBig53	1
+524	177	29	Alics53	2
+525	177	25	fido54	3
+526	178	39	max54	1
+527	178	5	fluffy54	2
+528	178	5	barky54	3
+529	179	34	winston54	1
+530	179	4	jojo54	2
+531	179	2	oscar54	3
+532	180	30	luna54	1
+533	180	21	MrBig54	2
+534	180	34	Alics54	3
+535	181	27	fido55	1
+536	181	1	max55	2
+537	181	28	fluffy55	3
+538	182	37	barky55	1
+539	182	35	winston55	2
+540	182	12	jojo55	3
+541	183	39	oscar55	1
+542	183	1	luna55	2
+543	183	13	MrBig55	3
+544	184	17	Alics55	1
+545	184	26	fido56	2
+546	184	16	max56	3
+547	185	23	fluffy56	1
+548	185	3	barky56	2
+549	185	35	winston56	3
+550	186	7	jojo56	1
+551	186	21	oscar56	2
+552	186	15	luna56	3
+553	187	27	MrBig56	1
+554	187	18	Alics56	2
+555	187	35	fido57	3
+556	188	27	max57	1
+557	188	29	fluffy57	2
+558	188	1	barky57	3
+559	189	23	winston57	1
+560	189	37	jojo57	2
+561	189	18	oscar57	3
+562	190	21	luna57	1
+563	190	7	MrBig57	2
+564	190	9	Alics57	3
+565	191	40	fido58	1
+566	191	31	max58	2
+567	191	40	fluffy58	3
+568	192	12	barky58	1
+569	192	15	winston58	2
+570	192	7	jojo58	3
+571	193	25	oscar58	1
+572	193	17	luna58	2
+573	193	30	MrBig58	3
+574	194	23	Alics58	1
+575	194	31	fido59	2
+576	194	6	max59	3
+577	195	7	fluffy59	1
+578	195	29	barky59	2
+579	195	38	winston59	3
+580	196	29	jojo59	1
+581	196	19	oscar59	2
+582	196	23	luna59	3
+583	197	23	MrBig59	1
+584	197	23	Alics59	2
+585	197	35	fido60	3
+586	198	10	max60	1
+587	198	39	fluffy60	2
+588	198	19	barky60	3
+589	199	25	winston60	1
+590	199	23	jojo60	2
+591	199	20	oscar60	3
+592	200	18	luna60	1
+593	200	19	MrBig60	2
+594	200	1	Alics60	3
+\.
+
+
+--
+-- Data for Name: orderitem; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.orderitem (id, customerorderid, sku, quantity) FROM stdin;
+1	1	100000059	2
+2	2	100000052	3
+3	3	100000110	1
+4	4	100000123	4
+5	5	100000063	4
+6	6	100000038	4
+7	7	100000054	1
+8	8	100000036	2
+9	9	100000124	2
+10	10	100000040	1
+11	11	100000099	2
+12	12	100000032	1
+13	13	100000082	3
+14	14	100000052	2
+15	15	100000103	3
+16	16	100000112	1
+17	17	100000096	4
+18	18	100000064	4
+19	19	100000066	2
+20	20	100000053	0
+21	21	100000089	2
+22	22	100000123	4
+23	23	100000054	1
+24	24	100000127	1
+25	25	100000097	2
+26	26	100000076	2
+27	27	100000046	1
+28	28	100000051	1
+29	29	100000111	3
+30	30	100000068	4
+31	31	100000090	1
+32	32	100000107	1
+33	33	100000098	4
+34	34	100000099	3
+35	35	100000119	4
+36	36	100000061	2
+37	37	100000114	3
+38	38	100000053	2
+39	39	100000122	2
+40	40	100000078	2
+41	41	100000069	2
+42	42	100000067	2
+43	43	100000107	4
+44	44	100000111	1
+45	45	100000099	1
+46	46	100000042	4
+47	47	100000109	1
+48	48	100000080	2
+49	49	100000092	4
+50	50	100000111	3
+51	51	100000074	1
+52	52	100000069	2
+53	53	100000046	4
+54	54	100000111	4
+55	55	100000049	4
+56	56	100000062	1
+57	57	100000097	2
+58	58	100000081	3
+59	59	100000121	4
+60	60	100000055	3
+61	61	100000049	2
+62	62	100000100	2
+63	63	100000120	3
+64	64	100000041	3
+65	65	100000036	1
+66	66	100000129	2
+67	67	100000055	3
+68	68	100000120	3
+69	69	100000091	2
+70	70	100000038	4
+71	71	100000111	2
+72	72	100000048	3
+73	73	100000103	3
+74	74	100000116	1
+75	75	100000096	3
+76	76	100000046	4
+77	77	100000033	4
+78	78	100000055	2
+79	79	100000087	1
+80	80	100000072	1
+81	81	100000056	2
+82	82	100000082	2
+83	83	100000083	4
+84	84	100000069	1
+85	85	100000109	2
+86	86	100000113	1
+87	87	100000086	4
+88	88	100000055	1
+89	89	100000055	1
+90	90	100000040	3
+91	91	100000130	3
+92	92	100000070	4
+93	93	100000055	2
+94	94	100000069	1
+95	95	100000059	3
+96	96	100000067	1
+97	97	100000114	4
+98	98	100000129	4
+99	99	100000092	2
+100	100	100000070	4
+101	101	100000107	4
+102	102	100000067	1
+103	103	100000115	4
+104	104	100000097	2
+105	105	100000070	2
+106	106	100000076	2
+107	107	100000124	1
+108	108	100000074	3
+109	109	100000053	1
+110	110	100000103	2
+111	111	100000078	3
+112	112	100000120	4
+113	113	100000066	3
+114	114	100000113	2
+115	115	100000094	1
+116	116	100000078	3
+117	117	100000122	4
+118	118	100000104	2
+119	119	100000053	2
+120	120	100000107	1
+121	121	100000068	4
+122	122	100000059	2
+123	123	100000126	4
+124	124	100000097	4
+125	125	100000110	2
+126	126	100000042	3
+127	127	100000054	1
+128	128	100000127	1
+129	129	100000128	2
+130	130	100000072	1
+131	131	100000046	2
+132	132	100000057	4
+133	133	100000064	1
+134	134	100000123	1
+135	135	100000047	3
+136	136	100000032	1
+137	137	100000092	4
+138	138	100000072	2
+139	139	100000099	3
+140	140	100000090	1
+141	141	100000073	1
+142	142	100000080	1
+143	143	100000108	3
+144	144	100000127	4
+145	145	100000085	2
+146	146	100000067	4
+147	147	100000075	1
+148	148	100000111	3
+149	149	100000031	1
+150	150	100000074	2
+151	68	100000072	1
+152	84	100000056	3
+153	103	100000082	4
+154	113	100000083	2
+155	51	100000069	2
+156	81	100000109	1
+157	59	100000113	4
+158	137	100000086	2
+159	111	100000055	4
+160	35	100000055	4
+161	56	100000040	2
+162	20	100000130	3
+163	87	100000070	1
+164	139	100000055	1
+165	6	100000069	2
+166	81	100000059	1
+167	117	100000067	2
+168	72	100000114	4
+169	35	100000129	1
+170	26	100000092	1
+171	114	100000070	3
+172	136	100000107	1
+173	127	100000067	4
+174	83	100000115	2
+175	88	100000097	3
+176	124	100000070	1
+177	140	100000076	1
+178	130	100000124	1
+179	112	100000074	3
+180	116	100000053	4
+181	110	100000103	2
+182	125	100000078	4
+183	131	100000120	1
+184	120	100000066	3
+185	125	100000113	1
+186	109	100000094	2
+187	148	100000078	1
+188	118	100000122	3
+189	119	100000104	4
+190	124	100000053	2
+191	120	100000107	2
+192	116	100000068	1
+193	148	100000059	4
+194	119	100000126	2
+195	137	100000097	4
+196	100	100000110	4
+197	108	100000042	2
+198	103	100000054	3
+199	125	100000127	1
+200	103	100000128	1
+\.
+
+
+--
+-- Data for Name: shipper; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.shipper (id, name) FROM stdin;
+1	USPS
+2	UPS
+3	FedEx
+4	Amazon
+\.
+
+
+--
+-- Data for Name: state; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.state (id, name) FROM stdin;
+AL	Alabama
+AK	Alaska
+AZ	Arizona
+AR	Arkansas
+CA	California
+CO	Colorado
+CT	Connecticut
+DE	Delaware
+DC	Dist of Col
+FL	Floridia
+GA	Georgia
+HI	Hiwaii
+ID	Idaho
+IL	Illinois
+IN	Indiana
+IA	Iowa
+KS	Kansas
+KY	Kentucky
+LA	Louisiana
+ME	Maine
+MD	Maryland
+MA	Massachusetts
+MI	Michigan
+MN	Minnesota
+MS	Mississippi
+MO	Missouri
+MT	Montanma
+NE	Nebraska
+NV	Nevada
+NH	New Hampshire
+NJ	New Jersey
+NM	New Mexico
+NY	New York
+NC	North Carolina
+ND	North Dakota
+OH	Ohio
+OK	Oklahoma
+OR	Oregon
+PA	Pennsylvania
+RI	Rhode Island
+SC	South Carolina
+SD	South Dakota
+TN	Tennessee
+TX	Texas
+UT	Utah
+VT	Vermont
+VA	Virginia
+WA	Washington
+WV	West Vrginia
+WI	Wisconsin
+WY	Wyoming
+\.
+
+
+--
+-- Data for Name: status; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.status (id, name) FROM stdin;
+1	Created
+2	In Manufacturing
+3	Ready to Ship
+4	Shipped
+5	Delivered
+\.
+
+
+--
+-- Data for Name: toorder; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.toorder (sku, numonhand, numordered, numneeded) FROM stdin;
+100000038	10	0	0
+100000056	5	0	0
+100000075	10	0	0
+100000116	3	0	0
+100000081	3	0	0
+100000130	6	0	0
+100000096	7	0	0
+100000067	10	0	0
+100000035	100	0	0
+\.
+
+
+--
+-- Name: customerorder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.customerorder_id_seq', 150, true);
+
+
+--
+-- Name: dogbreed_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.dogbreed_id_seq', 40, true);
+
+
+--
+-- Name: imageinfo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.imageinfo_id_seq', 594, true);
+
+
+--
+-- Name: orderitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orderitem_id_seq', 200, true);
+
+
+--
+-- Name: catalog catalog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.catalog
+    ADD CONSTRAINT catalog_pkey PRIMARY KEY (sku);
+
+
+--
+-- Name: customerorder customerorder_ordernumber_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder
+    ADD CONSTRAINT customerorder_ordernumber_key UNIQUE (ordernumber);
+
+
+--
+-- Name: customerorder customerorder_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder
+    ADD CONSTRAINT customerorder_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dogbreed dogbreed_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dogbreed
+    ADD CONSTRAINT dogbreed_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: imageinfo imageinfo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imageinfo
+    ADD CONSTRAINT imageinfo_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orderitem orderitem_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orderitem
+    ADD CONSTRAINT orderitem_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shipper shipper_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.shipper
+    ADD CONSTRAINT shipper_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: state state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.state
+    ADD CONSTRAINT state_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: status status_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.status
+    ADD CONSTRAINT status_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: toorder toorder_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.toorder
+    ADD CONSTRAINT toorder_pkey PRIMARY KEY (sku);
+
+
+--
+-- Name: customerorder customerorder_shipper_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder
+    ADD CONSTRAINT customerorder_shipper_fkey FOREIGN KEY (shipper) REFERENCES public.shipper(id);
+
+
+--
+-- Name: customerorder customerorder_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder
+    ADD CONSTRAINT customerorder_state_fkey FOREIGN KEY (state) REFERENCES public.state(id);
+
+
+--
+-- Name: customerorder customerorder_status_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customerorder
+    ADD CONSTRAINT customerorder_status_fkey FOREIGN KEY (status) REFERENCES public.status(id);
+
+
+--
+-- Name: imageinfo imageinfo_dogbreedid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imageinfo
+    ADD CONSTRAINT imageinfo_dogbreedid_fkey FOREIGN KEY (dogbreedid) REFERENCES public.dogbreed(id);
+
+
+--
+-- Name: imageinfo imageinfo_orderitemid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imageinfo
+    ADD CONSTRAINT imageinfo_orderitemid_fkey FOREIGN KEY (orderitemid) REFERENCES public.orderitem(id);
+
+
+--
+-- Name: orderitem orderitem_customerorderid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orderitem
+    ADD CONSTRAINT orderitem_customerorderid_fkey FOREIGN KEY (customerorderid) REFERENCES public.customerorder(id);
+
+
+--
+-- Name: orderitem orderitem_sku_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orderitem
+    ADD CONSTRAINT orderitem_sku_fkey FOREIGN KEY (sku) REFERENCES public.catalog(sku);
+
+
+--
+-- Name: toorder toorder_sku_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.toorder
+    ADD CONSTRAINT toorder_sku_fkey FOREIGN KEY (sku) REFERENCES public.catalog(sku);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

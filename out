@@ -1,0 +1,136 @@
+Hayden Lauritzen
+
+#1
+
+  name  |   avgDelivery   
+--------+-----------------
+ Amazon | 2 days
+ FedEx  | 2 days 12:00:00
+ UPS    | 3 days
+ USPS   | 2 days
+(4 rows)
+
+
+#2
+
+   group    | amount 
+------------+--------
+ 1 thru 13  | 4.1500
+ 14 thru 26 | 7.3400
+ 27 thru 40 | 54.400
+(3 rows)
+
+
+#3
+
+    Sku    |          Description          
+-----------+-------------------------------
+ 100000034 | Ask not for whom barks 8 0z
+ 100000035 | Ask Not for whom barks 12 oz
+ 100000037 | Life is Better 8 oz
+ 100000039 | Taknks for rubs and poop 8 oz
+ 100000043 | Dog Dad 16 oz
+ 100000044 | Dog Mom  8 oz
+ 100000045 | Dog Mom 12 oz
+ 100000050 | Well be watching you  8 oz
+ 100000058 | Cute Saying 6
+ 100000060 | Cute Saying 8
+ 100000065 | Cute Saying 13
+ 100000071 | Cute Saying 19
+ 100000077 | Cute Saying 25
+ 100000079 | Cute Saying 27
+ 100000084 | Cute Saying 32
+ 100000088 | Cute Saying 36
+ 100000093 | Cute Saying 41
+ 100000095 | Cute Saying 43
+ 100000101 | Cute Saying 49
+ 100000102 | Cute Saying 50
+ 100000105 | Cute Saying 53
+ 100000106 | Cute Saying 54
+ 100000117 | Cute Saying 65
+ 100000118 | Cute Saying 66
+ 100000125 | Cute Saying 73
+(25 rows)
+
+
+#4
+
+ ordernumber |    sku    
+-------------+-----------
+ Q123057646  | 100000086
+ Q401229064  | 100000074
+ Q467152707  | 100000086
+ Q535815874  | 100000074
+ Q592031859  | 100000074
+ Q811282451  | 100000074
+(6 rows)
+
+
+#5
+
+ orderNumber | orderItem.id 
+-------------+--------------
+ Q630323850  |           27
+ Q959949502  |           58
+(2 rows)
+
+
+#6
+
+    SKU    | NumSold 
+-----------+---------
+ 100000031 |       1
+ 100000032 |       2
+ 100000033 |       4
+ 100000034 |       0
+ 100000035 |       0
+ 100000036 |       3
+ 100000037 |       0
+ 100000038 |       8
+ 100000039 |       0
+ 100000040 |       6
+(10 rows)
+
+
+#7
+
+BEGIN
+UPDATE 1
+ id | ordernumber |      orderdate      |    name     | shipaddress |  city  | state |    email    | soldprice | shipper | trackingnum |      shipdate       | deliverydate | status 
+----+-------------+---------------------+-------------+-------------+--------+-------+-------------+-----------+---------+-------------+---------------------+--------------+--------
+ 36 | Q591942681  | 2022-02-21 00:00:00 | Customer 36 | Ship Ad 36  | City36 | MI    | CustMail136 |      9.98 |       4 | A1234567890 | 2022-03-01 00:00:00 |              |      4
+(1 row)
+
+ROLLBACK
+
+#8
+
+BEGIN
+DELETE 1
+DELETE 1
+ count 
+-------
+   149
+(1 row)
+
+ count 
+-------
+   199
+(1 row)
+
+ id | ordernumber | orderdate | name | shipaddress | city | state | email | soldprice | shipper | trackingnum | shipdate | deliverydate | status 
+----+-------------+-----------+------+-------------+------+-------+-------+-----------+---------+-------------+----------+--------------+--------
+(0 rows)
+
+ROLLBACK
+
+#9
+
+ imagemax | avg  
+----------+------
+        1 | 2.00
+        2 | 4.00
+        3 | 2.75
+        4 | 2.10
+(4 rows)
+
